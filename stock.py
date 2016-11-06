@@ -29,9 +29,13 @@ def predict_prices(dates, prices, x):
     svr_poly = SVR(kernel='poly', C=1e3, degree=2)
     svr_rbf = SVR(kernel='rbf', C=1e3, gamma=0.1)
 
+    print("Learning Linear")
     svr_lin.fit(dates, prices)
+    print("Learning poly")
     svr_poly.fit(dates, prices)
+    print("Learning RBF")
     svr_rbf.fit(dates, prices)
+    print("finished learning")
 
     plt.scatter(dates, prices, color='black', label='Data')
     plt.plot(dates, svr_rbf.predict(dates), color='red', label='RBF model')
@@ -46,16 +50,7 @@ def predict_prices(dates, prices, x):
     return svr_rbf.predict(x)[0], svr_lin.predict(x)[0], svr_poly.predict(x)[0]
 
 
-try:
-    os.chdir('data')
-    get_data('aapl.csv')
-except OSError as err:
-    print("os error: {0}".format(err))
-    cwd = os.getcwd()
-    print("cwd: {0}".format(cwd))
-    for entry in os.scandir('.'):
-        if entry.is_file():
-            print(entry.name)
-    exit()
+os.chdir('data')
+get_data('aapl.csv')
 predicted_price = predict_prices(dates, prices, 29)
 print(predicted_price)
